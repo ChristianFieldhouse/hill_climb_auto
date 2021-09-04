@@ -53,25 +53,6 @@ def getstatus():
     if (im.getpixel(twitter) == (76, 167, 225, 255)):
         return "continue"
 
-def truck_moon():
-    """keep on driving till it dies, then go back to start"""
-    time.sleep(1)
-    click(gas, t=500)
-    for i in range(6):
-        time.sleep(2)
-        click(gas)
-    time.sleep(5)
-    while True:
-        click(gas, 2000)
-        time.sleep(5)
-        status = getstatus()
-        if status == "start":
-            click(start)
-            return
-        if status == "continue":
-            continuestart()
-            return
-
 def go_to_start():
     status = getstatus()
     if status == "start":
@@ -82,31 +63,6 @@ def go_to_start():
         return
     continuestart()
 
-def tap_and_go():
-    print("at start --------------")
-    t = datetime.now()
-    time.sleep(1)
-    click(gas, 300)
-    time.sleep(0.4)
-    click(gas, 400)
-    for _ in range(4):
-        time.sleep(4)
-        click(gas, 200)
-    time.sleep(4)
-    while True:
-        print("boom")
-        click(gas, 3000)
-        status = getstatus()
-        print(status)
-        if status == "start":
-            click(start)
-            return
-        if status == "continue":
-            continuestart()
-            return
-        print("still in the game")
-    diff = (datetime.now() - t)
-#918
 def tap_boom():
     # about 400k / 10 mins
     # ie 1 mil = 25mins
@@ -138,11 +94,59 @@ def tap_boom():
     #print(f"so $${approx_money}")
     return approx_money
 
+def moonlander_moon():
+    print("at start --------------")
+    t0 = datetime.now()
+    time.sleep(1)
+    click(gas, 300)
+    time.sleep(0.4)
+    #click(gas, 400)
+    #time.sleep(1)
+    booms = 0
+    while True:
+        print(f"boom {booms}", end="\r")
+        booms += 1
+        click(gas, 9000)
+        t_fall = datetime.now()
+        died = False
+        while (datetime.now() - t_fall).total_seconds() < 10:
+            status = getstatus()
+            #print(status)
+            if status == "start":
+                click(start)
+                died = True
+                break
+            if status == "continue":
+                continuestart()
+                died = True
+                break
+        if died:
+            break
+        #print("still in the game")
+    print()
+    diff = datetime.now() - t0
+    #print("that took about", diff)
+    approx_money = diff.total_seconds() * 400_000 / (10 * 60)
+    #print(f"so $${approx_money}")
+    return approx_money
+
+
+def moonlander_moon_clean():
+    print("at start --------------")
+    time.sleep(1)
+    click(gas, 300)
+    time.sleep(0.4)
+    click(gas, 9000)
+    time.sleep(9)
+    redo()
+    exact_money = 25000
+    return exact_money
+
 def tryit():
     total_profit = 0
     go_to_start()
     while True:
-        total_profit += tap_boom()
+        total_profit += moonlander_moon_clean()
         print("total profit about", total_profit)
 
 tryit()
