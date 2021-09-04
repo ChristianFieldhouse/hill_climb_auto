@@ -44,6 +44,9 @@ def getscreen():
     os.system("adb exec-out screencap -p > shot.png")
 
 def getstatus():
+    """Probes exact pixel values to know which part
+    of the app you're in. These would probably have to
+    change for different devices."""
     getscreen()
     im = Image.open("shot.png")
     if (im.getpixel(start) == (92, 144, 53, 255)):
@@ -64,8 +67,12 @@ def go_to_start():
     continuestart()
 
 def tap_boom():
-    # about 400k / 10 mins
-    # ie 1 mil = 25mins
+    """about 400k / 10 mins
+    ie 1 mil = 25mins with the monster truck.
+    This strategy is probably more useful if
+    you are starting from scratch and want to
+    automate.
+    """
     print("at start --------------")
     t0 = datetime.now()
     time.sleep(1)
@@ -132,12 +139,14 @@ def moonlander_moon():
 
 
 def moonlander_moon_clean():
+    """Takes ~20 seconds to get 25000 (1mil in 13:20)"""
+    # todo: not actually always 25000, but close
     print("at start --------------")
     time.sleep(1)
     click(gas, 300)
     time.sleep(0.4)
     click(gas, 9000)
-    time.sleep(9)
+    time.sleep(9.5)
     redo()
     exact_money = 25000
     return exact_money
